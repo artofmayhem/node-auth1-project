@@ -17,6 +17,7 @@
     // etc
   ]
 
+
   response on non-authenticated:
   status 401
   {
@@ -26,3 +27,17 @@
 
 
 // Don't forget to add the router to the `exports` object so it can be required in other modules
+const router = require('express').Router();
+const Users = require('./users-model');
+const {restricted} = require('../auth/auth-middleware');
+
+router.get('/', restricted,  (req, res, next) => {
+  try {
+    const users =  Users.find();
+    res.status(200).json(users);
+  } catch (err) {
+    next(err);
+  }
+})
+
+module.exports = router;
